@@ -1,0 +1,64 @@
+name: Build Application (Serve)
+
+# Controls when the action will run. 
+on:
+  # Triggers the workflow on push or pull request events but only for the main branch
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  build_test:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go-version: [>=1.18.4] # We will deploy with only one version of node  
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Use GO ${{ matrix.go-version }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ matrix.go-version }}
+      - name: go build and test
+        run: |
+          mkdir build
+          export GOARCH=amd64
+          export GOOS=windows
+          go build -o build/serve-windows-amd64.exe
+          export GOOS=darwin
+          go build -o build/serve-darwin-amd64
+          export GOOS=linux
+          go build -o build/serve-linux-amd64
+          export GOARCH=arm64
+          export GOOS=windows
+          go build -o build/serve-windows-arm64.exe
+          export GOOS=darwin
+          go build -o build/serve-darwin-arm64
+          export GOOS=linux
+          go build -o build/serve-linux-arm64
+          export GOARCH=arm
+          export GOOS=windows
+          go build -o build/serve-windows-arm.exe
+          export GOOS=darwin
+          go build -o build/serve-darwin-arm
+          export GOOS=linux
+          go build -o build/serve-linux-arm
+          export GOARCH=386
+          export GOOS=windows
+          go build -o build/serve-windows-i386.exe
+          export GOOS=darwin
+          go build -o build/serve-darwin-i386
+          export GOOS=linux
+          go build -o build/serve-linux-i386
+      - name: deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./build
