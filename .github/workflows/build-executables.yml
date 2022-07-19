@@ -28,6 +28,7 @@ jobs:
           go-version: ${{ matrix.go-version }}
       - name: go build and test
         run: |
+          go get .
           mkdir build
           export GOARCH=amd64
           export GOOS=windows
