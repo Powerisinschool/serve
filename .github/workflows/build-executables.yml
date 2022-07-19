@@ -29,14 +29,35 @@ jobs:
       - name: go build and test
         run: |
           go get .
+          mkdir build
           export GOARCH=amd64
+          export GOOS=windows
+          go build -o build/serve-windows-amd64.exe
+          export GOOS=darwin
           go build -o build/serve-darwin-amd64
+          export GOOS=linux
+          go build -o build/serve-linux-amd64
           export GOARCH=arm64
+          export GOOS=windows
+          go build -o build/serve-windows-arm64.exe
+          export GOOS=darwin
           go build -o build/serve-darwin-arm64
+          export GOOS=linux
+          go build -o build/serve-linux-arm64
           export GOARCH=arm
+          export GOOS=windows
+          go build -o build/serve-windows-arm.exe
+          export GOOS=darwin
           go build -o build/serve-darwin-arm
+          export GOOS=linux
+          go build -o build/serve-linux-arm
           export GOARCH=386
+          export GOOS=windows
+          go build -o build/serve-windows-i386.exe
+          export GOOS=darwin
           go build -o build/serve-darwin-i386
+          export GOOS=linux
+          go build -o build/serve-linux-i386
       - name: deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
