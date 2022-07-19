@@ -54,7 +54,7 @@ jobs:
           go build -o build/serve-windows-i386.exe
           export GOOS=linux
           go build -o build/serve-linux-i386
-          cp -r ./builder/ ./build
+          cp ./builder/index.html ./build/
       - name: deploy to gh-pages
         uses: crazy-max/ghaction-github-pages@v1
         with:
